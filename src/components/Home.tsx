@@ -237,8 +237,8 @@ export default function Home() {
           <h2>Let's make<br /><em>contact.</em></h2>
         </div>
         <div className="contact">
-          <a href="mailto:founders@vyuhaaero.com"><span>founders@vyuhaaero.com</span><Arrow /></a>
-          <p>V-NEST, VIT Chennai<br />Tamil Nadu, India</p>
+          <a href="mailto:founders@vyuhaaero.com"><Arrow /><span>founders@vyuhaaero.com</span></a>
+          <p><span className="contact-location">V&#8209;NEST</span>, VIT Chennai<br />Tamil Nadu, India</p>
         </div>
         <div className="footer-bottom">
           <span>© 2026 VYUHA AERO SYSTEMS</span>

@@ -198,4 +198,4 @@
 .portrait img.portrait-logo{z-index:0;width:58%;height:58%;object-fit:contain;opacity:.95;filter:brightness(0) invert(1)}.founder:last-child h3{font-size:16px;letter-spacing:-.06em;white-space:nowrap}
 .founder{text-align:center}
 @media(max-width:720px){.founder:last-child{width:calc(50% - 9px)}}
-.contact a{display:inline-flex;align-items:baseline;gap:10px;white-space:nowrap}.contact .arrow{margin-left:0}
+.contact a{display:inline-flex;align-items:baseline;gap:10px;white-space:nowrap}.contact .arrow{margin-left:0}.contact-location{white-space:nowrap}
