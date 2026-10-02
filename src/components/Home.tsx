@@ -2,10 +2,10 @@ import { useState, useEffect, useCallback } from 'react';
 import Atmosphere from './Atmosphere';
 
 const founders: [string, string, string][] = [
-  ['Kailash A.', 'Chief Executive Officer', 'kailash-a.jpg'],
-  ['Prithviraj G.', 'Chief Technology Officer', 'prithviraj-g.jpg'],
-  ['Sai Vignesh B.', 'Chief Operating Officer', 'sai-vignesh-b.png'],
-  ['Tharun Kumar V.', 'Chief Financial Officer', 'tharun-kumar-v.jpg'],
+  ['Kailash A', 'Chief Executive Officer', 'kailash-a.jpg'],
+  ['Prithviraj G', 'Chief Technology Officer', 'prithviraj-g.jpg'],
+  ['Sai Vignesh B', 'Chief Operating Officer', 'sai-vignesh-b.png'],
+  ['Tharun Kumar V', 'Chief Financial Officer', 'tharun-kumar-v.jpg'],
   ['Dr. Richards Joe Stanislaus', 'Chief Technical Advisor', 'richards-joe-stanislaus.png']
 ];
 
@@ -161,10 +161,10 @@ export default function Home() {
       <section className="approach-section" id="about">
         <div className="section-index">01 / OUR APPROACH</div>
         <div className="approach-copy">
-          <h2>Built on first<br /><em>principles.</em></h2>
+          <h2>Made In India,<br /><em>Made for the World</em></h2>
           <div>
-            <p>VyuhaAero Systems is being incubated at V-NEST, VIT Chennai, by a team of 2nd-year engineering students driven by curiosity, ambition, and a commitment to building meaningful aerospace capabilities.</p>
-            <p>We are drawn to difficult problems in aerospace, autonomy, and intelligent systems. Our work is still at an early stage. We believe serious engineering means building, breaking, and building again until we reach a solution that meets the required standards.</p>
+            <p>VyuhaAero Systems is being incubated at V-NEST, VIT Chennai, by a team of engineering students working across aerospace, electronics, autonomy, and intelligent systems. We are focused on developing indigenous capabilities for aerial applications across defence and civilian sectors.</p>
+            <p>We are drawn to difficult problems in aerospace, autonomy, and intelligent systems. Our work is still at an early stage, and we approach it accordingly — through experimentation, measurement, iteration, and disciplined engineering. We build, test, learn, and refine until the system works as intended.</p>
           </div>
         </div>
         <div className="principles">
@@ -217,12 +217,11 @@ export default function Home() {
           <p>Small team. Long horizon.</p>
         </div>
         <div className="founder-grid">
-          {founders.map(([name, title, image], index) => (
+          {founders.map(([name, title, image]) => (
             <article className="founder" key={name}>
               <div className="portrait">
+                <img src={`${assetBase}vyuha-emblem.png`} alt="" aria-hidden="true" className="portrait-logo" />
                 <img src={`${assetBase}founders/${image}`} alt={`${name} portrait`} onError={e => { e.currentTarget.style.display = 'none'; }} />
-                <span>{String(index + 1).padStart(2, '0')}</span>
-                <b>V</b>
               </div>
               <h3>{name}</h3>
               <p>{title}</p>
@@ -238,7 +237,7 @@ export default function Home() {
           <h2>Let's make<br /><em>contact.</em></h2>
         </div>
         <div className="contact">
-          <a href="mailto:founders@vyuhaaero.com">founders@vyuhaaero.com <Arrow /></a>
+          <a href="mailto:founders@vyuhaaero.com"><span>founders@vyuhaaero.com</span><Arrow /></a>
           <p>V-NEST, VIT Chennai<br />Tamil Nadu, India</p>
         </div>
         <div className="footer-bottom">
