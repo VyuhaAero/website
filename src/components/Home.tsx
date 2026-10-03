@@ -238,7 +238,7 @@ export default function Home() {
           <h2>Let's make<br /><em>contact.</em></h2>
         </div>
         <div className="contact">
-          <a href="mailto:founders@vyuhaaero.com"><Arrow /><span>founders@vyuhaaero.com</span></a>
+          <a href="mailto:info@vyuhaaero.com"><Arrow /><span>info@vyuhaaero.com</span></a>
           <p><span className="contact-location">V&#8209;NEST</span>, VIT Chennai<br />Tamil Nadu, India</p>
         </div>
         <div className="footer-bottom">
