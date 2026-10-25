@@ -1,0 +1,88 @@
+{
+  "company": "VyuhaAero Systems",
+  "tagline": "Engineering aerial systems",
+  "seo_description": "VyuhaAero Systems is an Indian aerospace and autonomous-systems venture from Chennai, developing indigenous aerial platforms and distributed sensing architectures for civilian and defence applications.",
+  "hero": {
+    "eyebrow": "Chennai, India · Est. 2026",
+    "headline": "India's next frontier",
+    "headline_accent": "is above us.",
+    "intro": "We are an Indian deep-tech venture developing indigenous aerial platforms and the sensing, communications and navigation systems that make them useful, for civilian and defence applications.",
+    "primary_label": "Watch the film",
+    "secondary_label": "Our mission",
+    "status": "Early-stage development"
+  },
+  "statement": {
+    "lines": [
+      "Every border.",
+      "Every coastline.",
+      "Every sky."
+    ],
+    "body": "The nature of aerial operations has changed. Coverage has to be wider, systems have to be more resilient, and the capability behind them has to be built here. That is the work we have chosen."
+  },
+  "platform": {
+    "label": "Concept visualisation",
+    "title": "One platform.",
+    "title_accent": "Many missions.",
+    "note": "Concept render from the VyuhaAero launch film. It shows design intent, not a built or tested aircraft.",
+    "video": "/media/loops/platform.mp4"
+  },
+  "mission": {
+    "label": "Who we are",
+    "title": "Made in India.",
+    "title_accent": "Made for the world.",
+    "paragraphs": [
+      "VyuhaAero Systems is incubated at V-NEST, VIT Chennai, and founded by engineering students working across aerospace, electronics, autonomy and intelligent systems.",
+      "We are not building a drone and looking for a use case. We are building towards a distributed aerial sensing system, and engineering the aerial nodes it needs. Our work is at an early stage, and we describe it honestly: through experimentation, measurement, iteration and disciplined engineering."
+    ],
+    "facts": [
+      {
+        "label": "Base",
+        "value": "Chennai, Tamil Nadu"
+      },
+      {
+        "label": "Incubation",
+        "value": "V-NEST, VIT Chennai"
+      },
+      {
+        "label": "Founded",
+        "value": "2026"
+      },
+      {
+        "label": "Stage",
+        "value": "Early development"
+      }
+    ]
+  },
+  "film": {
+    "label": "The film",
+    "title": "Many, moving as one.",
+    "caption": "Vyuha (n.), Sanskrit: a formation. Our launch film sets out the problem we are working on and the direction we are taking.",
+    "video": "/media/vyuhaaero-launch-film.mp4",
+    "poster": "/media/launch-poster.jpg",
+    "youtube": ""
+  },
+  "careers": {
+    "label": "Join us",
+    "title": "Choose the hard way",
+    "title_accent": "with us.",
+    "body": "We are a small team with a long horizon. If you want to work on aerial platforms, RF and sensing, networked autonomy or embedded systems, and you value evidence over opinion, write to us with what you have built.",
+    "areas": [
+      "Aerial platforms",
+      "RF & sensing",
+      "Networks & autonomy",
+      "Embedded & avionics"
+    ],
+    "email": "info@vyuhaaero.com"
+  },
+  "contact": {
+    "email": "info@vyuhaaero.com",
+    "address_lines": [
+      "V-NEST, VIT Chennai",
+      "Tamil Nadu, India"
+    ],
+    "linkedin": "",
+    "instagram": "",
+    "x": "",
+    "youtube": ""
+  }
+}

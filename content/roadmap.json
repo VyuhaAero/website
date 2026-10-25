@@ -1,0 +1,13 @@
+{
+  "label": "Roadmap",
+  "title": "Built in phases,",
+  "title_accent": "earned by evidence.",
+  "note": "These are planning phases, not dates. Each phase begins when the previous one has produced its evidence.",
+  "phases": [
+    { "phase": "01", "title": "Foundations", "body": "Company basics, working practices and first subsystem results.", "current": true },
+    { "phase": "02", "title": "Platform and link", "body": "Validate the aerial platform, demonstrate communications and telemetry, set navigation and sensing baselines.", "current": false },
+    { "phase": "03", "title": "Networked nodes", "body": "Connect multiple nodes in controlled tests and prove health monitoring and recovery.", "current": false },
+    { "phase": "04", "title": "Missions with users", "body": "Work with real users to define and demonstrate specific civilian and defence uses.", "current": false },
+    { "phase": "05", "title": "Scale", "body": "Viable offerings, supply and production processes, and a team that can keep building.", "current": false }
+  ]
+}

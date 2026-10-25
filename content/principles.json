@@ -1,0 +1,11 @@
+{
+  "label": "How we work",
+  "title": "There is no shortcut",
+  "title_accent": "to capability.",
+  "items": [
+    { "title": "Systems thinking", "body": "Requirements and interfaces come before parts. We study the environment and validate assumptions before choosing a solution." },
+    { "title": "Indigenous capability", "body": "We build our own understanding of every critical subsystem, and we are clear about what we designed and what we bought." },
+    { "title": "Evidence over opinion", "body": "We describe our work by the evidence behind it: concept, simulation, bench test, flight test. If we have not measured it, we say so." },
+    { "title": "Responsible by design", "body": "Our defence-related work is lawful, authorised and keeps people in charge of decisions. We never overstate what our systems can do." }
+  ]
+}

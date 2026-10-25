@@ -1,28 +1,52 @@
-import { Suspense, useEffect, useState } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { Preload } from '@react-three/drei';
-import Scene from './components/Scene';
-import Overlay from './components/Overlay';
+import { useEffect, useState } from 'react';
+import { site } from './content';
+import { Footer, Nav } from './components/Chrome';
 import Home from './components/Home';
+import { UpdatePost, UpdatesIndex } from './components/UpdatePages';
+
+// Hash routing keeps every page working on GitHub Pages without server rewrites.
+// "#/updates/..." are pages; any other hash ("#film") is a section on the home page.
+function useHash() {
+  const [hash, setHash] = useState(() => window.location.hash);
+  useEffect(() => {
+    const onChange = () => setHash(window.location.hash);
+    window.addEventListener('hashchange', onChange);
+    return () => window.removeEventListener('hashchange', onChange);
+  }, []);
+  return hash;
+}
 
 function App() {
-  const [progress, setProgress] = useState(0);
-  const [showHome, setShowHome] = useState(false);
+  const hash = useHash();
+  const route = hash.startsWith('#/') ? hash.slice(2).split('/') : [];
+  const isPage = route.length > 0 && route[0] !== '';
+  const page0 = isPage ? route[0] : '';
+
   useEffect(() => {
-    const startedAt = performance.now();
-    const frame = (now: number) => {
-      const next = Math.min(100, ((now - startedAt) / 3600) * 100);
-      setProgress(next);
-      if (next < 100) requestAnimationFrame(frame);
-      else window.setTimeout(() => setShowHome(true), 700);
-    };
-    const id = requestAnimationFrame(frame);
-    return () => cancelAnimationFrame(id);
-  }, []);
-  return <div className="app-root">
-    <div className="space-canvas"><Canvas camera={{ position: [0, 0, 5], fov: 45 }} dpr={[1, 2]}><Suspense fallback={null}><Scene loadingComplete={showHome} /><Preload all /></Suspense></Canvas></div>
-    {!showHome && <Overlay progress={progress} />}
-    {showHome && <Home />}
-  </div>;
+    if (isPage) {
+      window.scrollTo(0, 0);
+      return;
+    }
+    const id = hash.slice(1);
+    if (id) requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView());
+  }, [hash, isPage]);
+
+  useEffect(() => {
+    document.title = page0 === 'updates'
+      ? `Updates — ${site.company}`
+      : `${site.company} — ${site.tagline}`;
+  }, [page0]);
+
+  let page = <Home />;
+  if (isPage && route[0] === 'updates') page = route[1] ? <UpdatePost slug={route[1]} /> : <UpdatesIndex />;
+
+  return (
+    <>
+      <Nav />
+      {page}
+      <Footer />
+    </>
+  );
 }
+
 export default App;
