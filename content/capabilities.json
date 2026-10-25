@@ -8,19 +8,19 @@
       "code": "01",
       "title": "Aerial platforms",
       "body": "Airframes, VTOL and hybrid configurations, with standard payload interfaces, docking and recovery.",
-      "media": "/media/loops/payload.mp4"
+      "media": ""
     },
     {
       "code": "02",
       "title": "Distributed sensing",
       "body": "Radar, optical and other sensing carried across many nodes, so the picture survives the loss of any one viewpoint.",
-      "media": "/media/loops/network.mp4"
+      "media": ""
     },
     {
       "code": "03",
       "title": "Resilient navigation",
       "body": "Navigation that reduces dependence on any single source, including GNSS, by checking sources against each other.",
-      "media": "/media/loops/navigation.mp4"
+      "media": ""
     },
     {
       "code": "04",

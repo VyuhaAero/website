@@ -4,6 +4,9 @@ import Topography from './Topography';
 import { FilmModal, FilmSection } from './Film';
 import { Arrow, Label, LoopVideo, Marquee, Reveal, Title } from './ui';
 import FormationNet from './FormationNet';
+import { AirframeVisual, MeshVisual, NavigationVisual, RadarVisual } from './CapVisuals';
+
+const capVisuals = [AirframeVisual, RadarVisual, NavigationVisual, MeshVisual];
 
 function Hero({ onPlay }: { onPlay: () => void }) {
   const h = site.hero;
@@ -133,9 +136,8 @@ function Capabilities() {
         {(c.areas ?? []).map((a, i) => (
           <Reveal key={a.title} className="cap" delay={i * 90}>
             <div className="cap-media">
-              {a.media ? <LoopVideo src={asset(a.media)} label={a.title} /> : <MeshGraphic />}
+              {a.media ? <LoopVideo src={asset(a.media)} label={a.title} /> : <CapVisual n={i} />}
               <span className="cap-code">{a.code}</span>
-              <CapGlyph n={i} />
             </div>
             <div className="cap-text">
               <h3>{a.title}</h3>
@@ -162,48 +164,9 @@ function Capabilities() {
   );
 }
 
-/** Animated mesh used when a capability has no video clip. */
-function MeshGraphic() {
-  const pts: [number, number][] = [[60, 50], [140, 34], [230, 60], [96, 120], [190, 128], [270, 116], [150, 186]];
-  const edges = [[0, 1], [1, 2], [0, 3], [1, 3], [1, 4], [2, 4], [2, 5], [3, 4], [4, 5], [3, 6], [4, 6], [5, 6]];
-  return (
-    <svg className="mesh" viewBox="0 0 320 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      <defs>
-        <pattern id="mesh-grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="rgba(232,226,214,0.06)" /></pattern>
-      </defs>
-      <rect width="320" height="220" fill="url(#mesh-grid)" />
-      {edges.map(([a, b], k) => (
-        <g key={k}>
-          <line x1={pts[a][0]} y1={pts[a][1]} x2={pts[b][0]} y2={pts[b][1]} className={a === 1 || b === 1 ? 'mesh-lead' : 'mesh-edge'} />
-          <circle r="1.6" className="mesh-packet">
-            <animateMotion dur={`${2.4 + (k % 4) * 0.7}s`} repeatCount="indefinite" path={`M${pts[a][0]},${pts[a][1]} L${pts[b][0]},${pts[b][1]}`} />
-          </circle>
-        </g>
-      ))}
-      {pts.map(([x, y], i) => (
-        <g key={i} className={i === 1 ? 'mesh-node mesh-leader' : 'mesh-node'}>
-          <circle cx={x} cy={y} r={i === 1 ? 5 : 3.5} />
-          {i === 1 && <circle cx={x} cy={y} r="5" className="mesh-pulse" />}
-        </g>
-      ))}
-    </svg>
-  );
-}
-
-/** Small line-art glyphs for the four capability areas. */
-function CapGlyph({ n }: { n: number }) {
-  const paths = [
-    'M4 24h40M24 10v28M10 18h10M28 18h10M16 30l8-6 8 6',
-    'M24 24m-4 0a4 4 0 1 0 8 0a4 4 0 1 0-8 0M24 24m-12 0a12 12 0 1 0 24 0a12 12 0 1 0-24 0M24 24m-19 0a19 19 0 1 0 38 0a19 19 0 1 0-38 0',
-    'M24 5v38M5 24h38M24 24l11-11M24 24m-14 0a14 14 0 1 0 28 0a14 14 0 1 0-28 0',
-    'M10 12l14 8 14-8M10 12l4 22M38 12l-4 22M24 20v18M14 34h20',
-  ];
-  return (
-    <svg className="glyph" viewBox="0 0 48 48" aria-hidden="true">
-      <path d={paths[n % paths.length]} />
-      {n === 3 && [[10, 12], [38, 12], [24, 20], [14, 34], [34, 34], [24, 38]].map(([x, y]) => <circle key={`${x}${y}`} cx={x} cy={y} r="2.2" />)}
-    </svg>
-  );
+function CapVisual({ n }: { n: number }) {
+  const Visual = capVisuals[n % capVisuals.length];
+  return <Visual />;
 }
 
 function Principles() {

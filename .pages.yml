@@ -151,7 +151,7 @@ content:
           - { name: code, label: Number, type: string }
           - { name: title, label: Title, type: string }
           - { name: body, label: Description, type: text }
-          - { name: media, label: Looping video (MP4, optional; an animated graphic is shown if empty), type: file }
+          - { name: media, label: Looping video (MP4, optional; replaces the animated illustration), type: file }
       - name: programmes
         label: Programmes (keep to one line each, no specifications)
         type: object
