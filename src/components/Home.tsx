@@ -1,251 +1,261 @@
-import { useState, useEffect, useCallback } from 'react';
-import Atmosphere from './Atmosphere';
+import { useState } from 'react';
+import { asset, capabilities, formatDate, principles, roadmap, site, team, updates } from '../content';
+import Topography from './Topography';
+import { FilmModal, FilmSection } from './Film';
+import { Arrow, Label, Reveal, Title } from './ui';
 
-const founders: [string, string, string][] = [
-  ['Kailash A', 'Chief Executive Officer', 'kailash-a.jpg'],
-  ['Prithviraj G', 'Chief Technology Officer', 'prithviraj-g.jpg'],
-  ['Sai Vignesh B', 'Chief Operating Officer', 'sai-vignesh-b.png'],
-  ['Tharun Kumar V', 'Chief Financial Officer', 'tharun-kumar-v.jpg'],
-  ['Dr. Richards Joe Stanislaus', 'Chief Technical Advisor', 'richards-joe-stanislaus.png']
-];
-
-const Arrow = () => <span className="arrow" aria-hidden="true">→</span>;
-
-const phrases: [string, string][] = [
-  ["For the world", "above the map."],
-  ["The unknown", "is an engineering problem."],
-  ["Where autonomy", "meets the unknown."],
-  ["When the map ends,", "systems must continue."],
-  ["From sensing", "to understanding."],
-  ["Built to navigate", "the uncertain."],
-  ["For missions", "without easy answers."],
-  ["Beyond the limits", "of the familiar."],
-  ["The difficult places", "are worth reaching."],
-  ["The horizon is not", "the limit."]
-];
-
-type Phase = 'typing' | 'holding' | 'deleting' | 'pausing';
-
-export default function Home() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const assetBase = import.meta.env.BASE_URL;
-
-  // Typewriter state
-  const [phraseIdx, setPhraseIdx] = useState(0);
-  const [charIndex, setCharIndex] = useState(0);
-  const [phase, setPhase] = useState<Phase>('typing');
-
-  const fullText = phrases[phraseIdx][0] + '\n' + phrases[phraseIdx][1];
-
-  // Check reduced motion preference
-  const prefersReducedMotion = typeof window !== 'undefined'
-    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  useEffect(() => {
-    if (prefersReducedMotion) {
-      setCharIndex(fullText.length);
-      return;
-    }
-
-    let timer: ReturnType<typeof setTimeout>;
-
-    switch (phase) {
-      case 'typing':
-        if (charIndex < fullText.length) {
-          timer = setTimeout(() => setCharIndex(prev => prev + 1), 80);
-        } else {
-          setPhase('holding');
-        }
-        break;
-      case 'holding':
-        timer = setTimeout(() => setPhase('deleting'), 3500);
-        break;
-      case 'deleting':
-        if (charIndex > 0) {
-          timer = setTimeout(() => setCharIndex(prev => prev - 1), 45);
-        } else {
-          setPhase('pausing');
-        }
-        break;
-      case 'pausing':
-        timer = setTimeout(() => {
-          setPhraseIdx(prev => (prev + 1) % phrases.length);
-          setPhase('typing');
-        }, 550);
-        break;
-    }
-
-    return () => clearTimeout(timer);
-  }, [charIndex, phase, fullText.length, prefersReducedMotion]);
-
-  // Derive displayed text
-  const displayed = fullText.substring(0, charIndex);
-  const newlinePos = displayed.indexOf('\n');
-  let line1 = displayed;
-  let line2 = '';
-  if (newlinePos !== -1) {
-    line1 = displayed.substring(0, newlinePos);
-    line2 = displayed.substring(newlinePos + 1);
-  }
-
-  // Show line2 em only when we have typed past the newline
-  const showLine2 = newlinePos !== -1;
-
-  const closeMenu = useCallback(() => setMenuOpen(false), []);
-
+function Hero({ onPlay }: { onPlay: () => void }) {
+  const h = site.hero;
   return (
-    <main className="site-shell animate-enter">
-      <Atmosphere />
-
-      {/* ───── NAVBAR ───── */}
-      <header className="nav-wrap">
-        <a className="wordmark" href="#top">
-          <img src={`${assetBase}vyuha-emblem.png`} alt="VyuhaAero Systems" className="logo-img" />
-          <div className="wordmark-text">
-            <span>VyuhaAero</span>
-            <small>Systems</small>
-          </div>
-        </a>
-        <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
-          {menuOpen ? 'Close' : 'Menu'}
-        </button>
-        <nav className={menuOpen ? 'navigation open' : 'navigation'}>
-          <a href="#about" onClick={closeMenu}>Approach</a>
-          <a href="#products" onClick={closeMenu}>Updates</a>
-          <a href="#founders" onClick={closeMenu}>Founders</a>
-          <a href="#contact" onClick={closeMenu}>Contact</a>
-        </nav>
-      </header>
-
-      {/* ───── HERO ───── */}
-      <section className="hero-section" id="top">
-        <div className="hero-copy">
-          <p className="eyebrow"><span className="live-dot" /> CHENNAI, INDIA · EST. 2026</p>
-
-          <h1 className="hero-headline-dynamic" aria-label={fullText.replace('\n', ' ')}>
-            <span className="hl-line1">{line1}</span>
-            {showLine2 && <br />}
-            {showLine2 && <em className="hl-line2">{line2}</em>}
-            <span className="typewriter-cursor" aria-hidden="true" />
-          </h1>
-
-          <p className="hero-description">
-            VyuhaAero Systems is an Indian deeptech startup focused on aerial infrastructure with both defence and civilian applications. We are at the beginning of a long journey — learning, building, and refining with intent.
-          </p>
-
-          <div className="hero-actions">
-            <a className="button primary" href="#about">Our approach <Arrow /></a>
-            <a className="plain-link" href="#founders">Meet the team <span>↓</span></a>
-          </div>
+    <section className="hero" id="top">
+      <div className="hero-sky" />
+      <Topography />
+      <div className="hero-vignette" />
+      <div className="hero-inner">
+        <p className="label hero-eyebrow"><span className="live-dot" />{h.eyebrow}</p>
+        <h1 className="hero-title">
+          <span className="line"><span>{h.headline}</span></span>
+          <span className="line"><em>{h.headline_accent}</em></span>
+        </h1>
+        <p className="hero-intro">{h.intro}</p>
+        <div className="hero-actions">
+          <button className="btn btn-primary" onClick={onPlay}>
+            <span className="btn-play" aria-hidden="true">▶</span>{h.primary_label}
+          </button>
+          <a className="btn btn-ghost" href="#mission">{h.secondary_label}<Arrow /></a>
         </div>
+      </div>
+      <div className="hero-hud" aria-hidden="true">
+        <div><span>STATUS</span><b><i className="live-dot" />{h.status}</b></div>
+        <div><span>INCUBATION</span><b>V-NEST · VIT CHENNAI</b></div>
+        <div><span>POSITION</span><b>13.08° N · 80.27° E</b></div>
+        <div className="hero-scroll"><span>SCROLL</span><i /></div>
+      </div>
+    </section>
+  );
+}
 
-        <div className="orbit-stage" aria-hidden="true">
-          <p className="stage-label sl1">ENGINEERING<br />THE UNCHARTED</p>
-          <div className="orbit-glow" />
-          <div className="orbit-line ol1"><i /></div>
-          <div className="orbit-line ol2"><i /></div>
-          <div className="orbit-line ol3"><i /></div>
-          <div className="orbit-center"><img src={`${assetBase}vyuha-emblem.png`} alt="" /><i /><i /><i /></div>
-          <div className="crosshair ch1" />
-          <div className="crosshair ch2" />
-        </div>
-      </section>
+function Statement() {
+  const s = site.statement;
+  return (
+    <section className="statement">
+      <div className="statement-lines">
+        {(s.lines ?? []).map((line, i) => (
+          <Reveal key={line} delay={i * 140}><p>{line}</p></Reveal>
+        ))}
+      </div>
+      <Reveal delay={420}><p className="statement-body">{s.body}</p></Reveal>
+    </section>
+  );
+}
 
-      {/* ───── MANIFESTO ───── */}
-      <section className="manifesto">
-        <p>There is no shortcut to capability.</p>
-        <span>VYUHA AERO SYSTEMS / 01</span>
-      </section>
+function Mission() {
+  const m = site.mission;
+  return (
+    <section className="mission" id="mission">
+      <img className="mission-emblem" src={asset('emblem-white.png')} alt="" aria-hidden="true" />
+      <div className="split">
+        <div>
+          <Label index="01">{m.label}</Label>
+          <Reveal><Title text={m.title} accent={m.title_accent} /></Reveal>
+        </div>
+        <Reveal className="prose" delay={120}>
+          {(m.paragraphs ?? []).map(p => <p key={p.slice(0, 24)}>{p}</p>)}
+        </Reveal>
+      </div>
+      <dl className="facts">
+        {(m.facts ?? []).map(f => (
+          <div key={f.label}><dt>{f.label}</dt><dd>{f.value}</dd></div>
+        ))}
+      </dl>
+    </section>
+  );
+}
 
-      {/* ───── APPROACH ───── */}
-      <section className="approach-section" id="about">
-        <img src={`${assetBase}vyuha-emblem.png`} alt="" aria-hidden="true" className="approach-watermark" />
-        <div className="section-index">01 / OUR APPROACH</div>
-        <div className="approach-copy">
-          <h2>Made in India,<br /><em>Made for the World.</em></h2>
-          <div>
-            <p>VyuhaAero Systems is being incubated at V-NEST, VIT Chennai, by a team of engineering students working across aerospace, electronics, autonomy, and intelligent systems. We are focused on developing indigenous capabilities for aerial applications across defence and civilian sectors.</p>
-            <p>We are drawn to difficult problems in aerospace, autonomy, and intelligent systems. Our work is still at an early stage, and we approach it accordingly — through experimentation, measurement, iteration, and disciplined engineering. We build, test, learn, and refine until the system works as intended.</p>
-          </div>
+function Capabilities() {
+  const c = capabilities;
+  return (
+    <section className="capabilities" id="capabilities">
+      <div className="split">
+        <div>
+          <Label index="02">{c.label}</Label>
+          <Reveal><Title text={c.title} accent={c.title_accent} /></Reveal>
         </div>
-        <div className="principles">
-          <article>
-            <span>01</span>
-            <h3>Systems Thinking</h3>
-            <p>We study the environment, understand the constraints, and validate our assumptions before choosing a solution.</p>
-          </article>
-          <article>
-            <span>02</span>
-            <h3>Indigenous</h3>
-            <p>We believe meaningful capability is built through patient engineering, technical depth, and solutions suited to our needs.</p>
-          </article>
-          <article>
-            <span>03</span>
-            <h3>Long-term</h3>
-            <p>We are building foundations for the future, prioritising sound engineering over promises made ahead of the work.</p>
-          </article>
-        </div>
-      </section>
-
-      {/* ───── UPDATES ───── */}
-      <section className="updates-section" id="products">
-        <div className="updates-copy">
-          <div className="section-index">02 / CURRENT STATUS</div>
-          <h2>Engineering what<br /><em>comes next.</em></h2>
-          <p>Our early work is focused on learning, experimentation, and developing the foundations for future aerospace systems. We will share more as our work matures and reaches the right stage for public release.</p>
-        </div>
-        <div className="sealed-module">
-          <div className="module-header">
-            <span>VYUHA / DEVELOPMENT LOG</span>
-            <span>IN DEVELOPMENT</span>
-          </div>
-          <div className="module-center">
-            <i /><i /><i />
-            <strong>EARLY-STAGE<br />DEVELOPMENT</strong>
-          </div>
-          <div className="module-footer">
-            <span>PUBLIC RELEASE / PENDING</span>
-            <span>+</span>
-          </div>
-        </div>
-      </section>
-
-      {/* ───── FOUNDERS ───── */}
-      <section className="founders-section" id="founders">
-        <div className="section-index">03 / FOUNDERS</div>
-        <div className="founders-intro">
-          <h2>People who<br /><em>choose the hard way.</em></h2>
-          <p>Small team. Long horizon.</p>
-        </div>
-        <div className="founder-grid">
-          {founders.map(([name, title, image]) => (
-            <article className="founder" key={name}>
-              <div className="portrait">
-                <img src={`${assetBase}vyuha-emblem.png`} alt="" aria-hidden="true" className="portrait-logo" />
-                <img src={`${assetBase}founders/${image}`} alt={`${name} portrait`} onError={e => { e.currentTarget.style.display = 'none'; }} />
-              </div>
-              <h3>{name}</h3>
-              <p>{title}</p>
-            </article>
+        <Reveal delay={120}><p className="lede">{c.intro}</p></Reveal>
+      </div>
+      <div className="cap-grid">
+        {(c.areas ?? []).map((a, i) => (
+          <Reveal key={a.title} className="cap" delay={i * 90}>
+            <div className="cap-top"><span>{a.code}</span><CapGlyph n={i} /></div>
+            <h3>{a.title}</h3>
+            <p>{a.body}</p>
+          </Reveal>
+        ))}
+      </div>
+      {(c.programmes ?? []).length > 0 && (
+        <div className="programmes">
+          <p className="label"><span className="label-index">//</span><span>Programmes</span></p>
+          {(c.programmes ?? []).map(p => (
+            <Reveal key={p.name} className="programme">
+              <h3>{p.name}</h3>
+              <span className="programme-kind">{p.kind}</span>
+              <p>{p.body}</p>
+              <span className="tag">{p.status}</span>
+            </Reveal>
           ))}
         </div>
-      </section>
+      )}
+    </section>
+  );
+}
 
-      {/* ───── CONTACT ───── */}
-      <footer id="contact">
+/** Small line-art glyphs for the four capability areas. */
+function CapGlyph({ n }: { n: number }) {
+  const paths = [
+    'M4 24h40M24 10v28M10 18h10M28 18h10M16 30l8-6 8 6',
+    'M24 24m-4 0a4 4 0 1 0 8 0a4 4 0 1 0-8 0M24 24m-12 0a12 12 0 1 0 24 0a12 12 0 1 0-24 0M24 24m-19 0a19 19 0 1 0 38 0a19 19 0 1 0-38 0',
+    'M24 5v38M5 24h38M24 24l11-11M24 24m-14 0a14 14 0 1 0 28 0a14 14 0 1 0-28 0',
+    'M10 12l14 8 14-8M10 12l4 22M38 12l-4 22M24 20v18M14 34h20',
+  ];
+  return (
+    <svg className="glyph" viewBox="0 0 48 48" aria-hidden="true">
+      <path d={paths[n % paths.length]} />
+      {n === 3 && [[10, 12], [38, 12], [24, 20], [14, 34], [34, 34], [24, 38]].map(([x, y]) => <circle key={`${x}${y}`} cx={x} cy={y} r="2.2" />)}
+    </svg>
+  );
+}
+
+function Principles() {
+  const p = principles;
+  return (
+    <section className="principles" id="principles">
+      <Label index="04">{p.label}</Label>
+      <Reveal><Title text={p.title} accent={p.title_accent} /></Reveal>
+      <ol className="principle-list">
+        {(p.items ?? []).map((item, i) => (
+          <Reveal key={item.title} className="principle" delay={i * 80}>
+            <span className="principle-n">0{i + 1}</span>
+            <h3>{item.title}</h3>
+            <p>{item.body}</p>
+          </Reveal>
+        ))}
+      </ol>
+    </section>
+  );
+}
+
+function Roadmap() {
+  const r = roadmap;
+  return (
+    <section className="roadmap" id="roadmap">
+      <div className="split">
         <div>
-          <p className="section-index">04 / CONTACT</p>
-          <h2>Let's make<br /><em>contact.</em></h2>
+          <Label index="05">{r.label}</Label>
+          <Reveal><Title text={r.title} accent={r.title_accent} /></Reveal>
         </div>
-        <div className="contact">
-          <a href="mailto:info@vyuhaaero.com"><Arrow /><span>info@vyuhaaero.com</span></a>
-          <p><span className="contact-location">V&#8209;NEST</span>, VIT Chennai<br />Tamil Nadu, India</p>
+        <Reveal delay={120}><p className="lede">{r.note}</p></Reveal>
+      </div>
+      <div className="track">
+        {(r.phases ?? []).map((ph, i) => (
+          <Reveal key={ph.phase} className={`phase ${ph.current ? 'phase-current' : ''}`} delay={i * 90}>
+            <div className="phase-node"><i /></div>
+            <span className="phase-n">PHASE {ph.phase}{ph.current && <b> · NOW</b>}</span>
+            <h3>{ph.title}</h3>
+            <p>{ph.body}</p>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function LatestUpdates() {
+  if (updates.length === 0) return null;
+  return (
+    <section className="updates" id="updates">
+      <div className="updates-head">
+        <div>
+          <Label index="06">Updates</Label>
+          <Title text="From the" accent="workshop." />
         </div>
-        <div className="footer-bottom">
-          <span>© 2026 VYUHA AERO SYSTEMS</span>
-          <span>INDIA</span>
+        <a className="btn btn-ghost" href="#/updates">All updates<Arrow /></a>
+      </div>
+      <div className="update-grid">
+        {updates.slice(0, 3).map((u, i) => <UpdateCard key={u.slug} u={u} delay={i * 90} />)}
+      </div>
+    </section>
+  );
+}
+
+export function UpdateCard({ u, delay = 0 }: { u: (typeof updates)[number]; delay?: number }) {
+  return (
+    <Reveal delay={delay}>
+      <a className="update-card" href={`#/updates/${u.slug}`}>
+        <div className="update-thumb">
+          {u.cover ? <img src={asset(u.cover)} alt="" loading="lazy" /> : <img className="update-thumb-mark" src={asset('emblem-white.png')} alt="" />}
         </div>
-      </footer>
+        <div className="update-meta"><span>{u.category}</span><span>{formatDate(u.date)}</span></div>
+        <h3>{u.title}</h3>
+        <p>{u.summary}</p>
+        <span className="update-more">Read<Arrow /></span>
+      </a>
+    </Reveal>
+  );
+}
+
+function People() {
+  const t = team;
+  return (
+    <section className="people" id="people">
+      <Label index="07">{t.label}</Label>
+      <Reveal><Title text={t.title} accent={t.title_accent} /></Reveal>
+      <div className="people-grid">
+        {(t.members ?? []).map((m, i) => (
+          <Reveal key={m.name} className="person" delay={i * 70}>
+            <div className="person-photo">
+              <img className="person-fallback" src={asset('emblem-white.png')} alt="" aria-hidden="true" />
+              {m.photo && <img src={asset(m.photo)} alt={m.name} loading="lazy" onError={e => { e.currentTarget.style.display = 'none'; }} />}
+            </div>
+            <h3>{m.linkedin ? <a href={m.linkedin} target="_blank" rel="noreferrer">{m.name} ↗</a> : m.name}</h3>
+            <p>{m.role}</p>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Careers() {
+  const c = site.careers;
+  return (
+    <section className="careers" id="careers">
+      <div className="careers-glow" aria-hidden="true" />
+      <Label index="08">{c.label}</Label>
+      <Reveal><Title text={c.title} accent={c.title_accent} /></Reveal>
+      <div className="careers-body">
+        <p className="lede">{c.body}</p>
+        <ul className="areas">{(c.areas ?? []).map(a => <li key={a}>{a}</li>)}</ul>
+      </div>
+      <a className="btn btn-primary" href={`mailto:${c.email}?subject=Joining%20VyuhaAero`}>Write to us<Arrow /></a>
+    </section>
+  );
+}
+
+export default function Home() {
+  const [filmOpen, setFilmOpen] = useState(false);
+  return (
+    <main>
+      <Hero onPlay={() => setFilmOpen(true)} />
+      <Statement />
+      <Mission />
+      <Capabilities />
+      <FilmSection />
+      <Principles />
+      <Roadmap />
+      <LatestUpdates />
+      <People />
+      <Careers />
+      <FilmModal open={filmOpen} onClose={() => setFilmOpen(false)} />
     </main>
   );
 }

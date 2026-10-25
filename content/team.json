@@ -1,0 +1,12 @@
+{
+  "label": "People",
+  "title": "Small team.",
+  "title_accent": "Long horizon.",
+  "members": [
+    { "name": "Kailash A", "role": "Chief Executive Officer", "photo": "/media/team/kailash-a.jpg", "linkedin": "" },
+    { "name": "Prithviraj G", "role": "Chief Technology Officer", "photo": "", "linkedin": "" },
+    { "name": "Sai Vignesh B", "role": "Chief Operating Officer", "photo": "/media/team/sai-vignesh-b.jpg", "linkedin": "" },
+    { "name": "Tharun Kumar V", "role": "Chief Financial Officer", "photo": "", "linkedin": "" },
+    { "name": "Dr. Richards Joe Stanislaus", "role": "Chief Technical Advisor", "photo": "/media/team/richards-joe-stanislaus.jpg", "linkedin": "" }
+  ]
+}

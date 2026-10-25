@@ -1,0 +1,42 @@
+{
+  "label": "What we build",
+  "title": "One architecture.",
+  "title_accent": "Many missions.",
+  "intro": "We design complete architectures and interfaces, not isolated gadgets. Our engineering is organised around the aerial platform and the systems that turn many platforms into one network.",
+  "areas": [
+    {
+      "code": "01",
+      "title": "Aerial platforms",
+      "body": "Airframes, VTOL and hybrid configurations, with standard payload interfaces, docking and recovery."
+    },
+    {
+      "code": "02",
+      "title": "Distributed sensing",
+      "body": "Radar, optical and other sensing carried across many nodes, so the picture survives the loss of any one viewpoint."
+    },
+    {
+      "code": "03",
+      "title": "Resilient navigation",
+      "body": "Navigation that reduces dependence on any single source, including GNSS, by checking sources against each other."
+    },
+    {
+      "code": "04",
+      "title": "Networked autonomy",
+      "body": "Communications, node health and recovery, with operators kept in charge of every decision that matters."
+    }
+  ],
+  "programmes": [
+    {
+      "name": "Vajra-Net",
+      "kind": "Distributed aerial sensing",
+      "body": "Our core architecture: aerial nodes, a sensing layer and a communications network working as one.",
+      "status": "Architecture in development"
+    },
+    {
+      "name": "O.M.N.I.S.",
+      "kind": "Resilient navigation",
+      "body": "A navigation concept that combines several references and lowers its confidence in any source that disagrees.",
+      "status": "Concept"
+    }
+  ]
+}
