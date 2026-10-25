@@ -113,6 +113,75 @@ export default function Topography() {
           ctx.stroke();
         }
       }
+      drawFormation(t, aspect);
+    };
+
+    // A formation of aerial nodes holding station above the terrain, with
+    // sensor footprints and data links, as in the film's Vajra-Net shot.
+    const nodes = [
+      [0.62, 2.05], [1.02, 1.75], [1.42, 2.1], [0.82, 2.6], [1.25, 2.75], [1.7, 2.5], [1.12, 3.4],
+    ].map(([x, z], i) => ({ x, z, phase: hash(i, 3) * 6.28 }));
+    const links = [[0, 1], [1, 2], [0, 3], [1, 3], [1, 4], [2, 4], [2, 5], [3, 4], [4, 5], [3, 6], [4, 6], [5, 6]];
+
+    const drawFormation = (t: number, aspect: number) => {
+      const horizon = h * 0.47;
+      const shift = w < 760 ? -0.55 : 0;
+      const pts = nodes.map(n => {
+        const wx = n.x + shift + Math.sin(t * 0.0003 + n.phase) * 0.05;
+        const z = n.z + Math.cos(t * 0.00025 + n.phase) * 0.08;
+        const alt = 0.36 + Math.sin(t * 0.0006 + n.phase) * 0.025;
+        const u = wx / (z * aspect * 1.2) + 0.5;
+        const sx = w * (u * 1.2 - 0.1);
+        const gy = horizon + (h - horizon) / z;
+        return { sx, gy, sy: gy - (alt * (h - horizon)) / z, z };
+      });
+
+      for (const p of pts) {
+        const half = (h * 0.09) / p.z;
+        const g = ctx.createLinearGradient(0, p.sy, 0, p.gy);
+        g.addColorStop(0, 'rgba(200,215,235,0.22)');
+        g.addColorStop(1, 'rgba(200,215,235,0.02)');
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.moveTo(p.sx, p.sy);
+        ctx.lineTo(p.sx - half, p.gy);
+        ctx.lineTo(p.sx + half, p.gy);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(220,230,240,0.18)';
+        ctx.beginPath();
+        ctx.ellipse(p.sx, p.gy, half, half * 0.22, 0, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      ctx.lineWidth = 1;
+      links.forEach(([a, b], k) => {
+        const p = pts[a], q = pts[b];
+        const lead = a === 1 || b === 1;
+        ctx.strokeStyle = lead ? 'rgba(244,170,100,0.7)' : 'rgba(235,235,235,0.38)';
+        ctx.beginPath(); ctx.moveTo(p.sx, p.sy); ctx.lineTo(q.sx, q.sy); ctx.stroke();
+        // data packet travelling along the link
+        const f = ((t * 0.00035 + hash(k, 11)) % 1);
+        ctx.fillStyle = lead ? 'rgba(255,190,120,0.95)' : 'rgba(255,255,255,0.8)';
+        ctx.fillRect(p.sx + (q.sx - p.sx) * f - 1, p.sy + (q.sy - p.sy) * f - 1, 2, 2);
+      });
+
+      pts.forEach((p, i) => {
+        const r = Math.max(2.5, 7 / p.z);
+        const leader = i === 1;
+        const glow = ctx.createRadialGradient(p.sx, p.sy, 0, p.sx, p.sy, r * 5);
+        glow.addColorStop(0, leader ? 'rgba(244,150,66,0.55)' : 'rgba(255,255,255,0.35)');
+        glow.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = glow;
+        ctx.beginPath(); ctx.arc(p.sx, p.sy, r * 5, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = leader ? '#f6b37a' : '#f4f1ea';
+        ctx.beginPath(); ctx.arc(p.sx, p.sy, r, 0, Math.PI * 2); ctx.fill();
+        if (leader) {
+          const pulse = (t * 0.0006) % 1;
+          ctx.strokeStyle = `rgba(244,150,66,${0.6 * (1 - pulse)})`;
+          ctx.beginPath(); ctx.arc(p.sx, p.sy, r + pulse * 26, 0, Math.PI * 2); ctx.stroke();
+        }
+      });
     };
 
     const loop = (t: number) => {

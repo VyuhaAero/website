@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { asset, capabilities, formatDate, principles, roadmap, site, team, updates } from '../content';
 import Topography from './Topography';
 import { FilmModal, FilmSection } from './Film';
-import { Arrow, Label, Reveal, Title } from './ui';
+import { Arrow, Label, LoopVideo, Marquee, Reveal, Title } from './ui';
+import FormationNet from './FormationNet';
 
 function Hero({ onPlay }: { onPlay: () => void }) {
   const h = site.hero;
@@ -37,14 +38,59 @@ function Hero({ onPlay }: { onPlay: () => void }) {
 
 function Statement() {
   const s = site.statement;
+  const ref = useRef<HTMLElement>(null);
+  const [progress, setProgress] = useState(0);
+
+  // Lines and words light up as the section scrolls through the viewport.
+  useEffect(() => {
+    const onScroll = () => {
+      const r = ref.current!.getBoundingClientRect();
+      const vh = window.innerHeight;
+      setProgress(Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (r.height * 0.9))));
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => { window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', onScroll); };
+  }, []);
+
+  const lines = s.lines ?? [];
+  const words = (s.body ?? '').split(' ');
   return (
-    <section className="statement">
+    <section className="statement" ref={ref}>
       <div className="statement-lines">
-        {(s.lines ?? []).map((line, i) => (
-          <Reveal key={line} delay={i * 140}><p>{line}</p></Reveal>
+        {lines.map((line, i) => (
+          <p key={line} className={progress > (i + 0.4) / (lines.length + 2) ? 'lit' : ''}>{line}</p>
         ))}
       </div>
-      <Reveal delay={420}><p className="statement-body">{s.body}</p></Reveal>
+      <p className="statement-body">
+        {words.map((word, i) => (
+          <span key={i} className={progress > 0.45 + (i / words.length) * 0.45 ? 'lit' : ''}>{word} </span>
+        ))}
+      </p>
+    </section>
+  );
+}
+
+function PlatformBand() {
+  const p = site.platform;
+  if (!p?.video) return null;
+  return (
+    <section className="band">
+      <div className="band-frame">
+        <LoopVideo src={asset(p.video)} className="band-video" label={p.note} />
+        <div className="band-scan" aria-hidden="true" />
+        <div className="band-hud" aria-hidden="true">
+          <span className="band-tl">FIG. 01 · {p.label}</span>
+          <span className="band-tr"><i className="live-dot" />LOOP</span>
+          <span className="band-reticle"><i /><i /></span>
+        </div>
+        <span className="corner tl" /><span className="corner tr" /><span className="corner bl" /><span className="corner br" />
+      </div>
+      <div className="band-caption">
+        <Reveal><Title text={p.title} accent={p.title_accent} /></Reveal>
+        <p className="band-note">{p.note}</p>
+      </div>
     </section>
   );
 }
@@ -86,14 +132,21 @@ function Capabilities() {
       <div className="cap-grid">
         {(c.areas ?? []).map((a, i) => (
           <Reveal key={a.title} className="cap" delay={i * 90}>
-            <div className="cap-top"><span>{a.code}</span><CapGlyph n={i} /></div>
-            <h3>{a.title}</h3>
-            <p>{a.body}</p>
+            <div className="cap-media">
+              {a.media ? <LoopVideo src={asset(a.media)} label={a.title} /> : <MeshGraphic />}
+              <span className="cap-code">{a.code}</span>
+              <CapGlyph n={i} />
+            </div>
+            <div className="cap-text">
+              <h3>{a.title}</h3>
+              <p>{a.body}</p>
+            </div>
           </Reveal>
         ))}
       </div>
-      {(c.programmes ?? []).length > 0 && (
-        <div className="programmes">
+      <div className="programmes">
+        <FormationNet />
+        <div className="programme-list">
           <p className="label"><span className="label-index">//</span><span>Programmes</span></p>
           {(c.programmes ?? []).map(p => (
             <Reveal key={p.name} className="programme">
@@ -104,8 +157,36 @@ function Capabilities() {
             </Reveal>
           ))}
         </div>
-      )}
+      </div>
     </section>
+  );
+}
+
+/** Animated mesh used when a capability has no video clip. */
+function MeshGraphic() {
+  const pts: [number, number][] = [[60, 50], [140, 34], [230, 60], [96, 120], [190, 128], [270, 116], [150, 186]];
+  const edges = [[0, 1], [1, 2], [0, 3], [1, 3], [1, 4], [2, 4], [2, 5], [3, 4], [4, 5], [3, 6], [4, 6], [5, 6]];
+  return (
+    <svg className="mesh" viewBox="0 0 320 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <pattern id="mesh-grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="rgba(232,226,214,0.06)" /></pattern>
+      </defs>
+      <rect width="320" height="220" fill="url(#mesh-grid)" />
+      {edges.map(([a, b], k) => (
+        <g key={k}>
+          <line x1={pts[a][0]} y1={pts[a][1]} x2={pts[b][0]} y2={pts[b][1]} className={a === 1 || b === 1 ? 'mesh-lead' : 'mesh-edge'} />
+          <circle r="1.6" className="mesh-packet">
+            <animateMotion dur={`${2.4 + (k % 4) * 0.7}s`} repeatCount="indefinite" path={`M${pts[a][0]},${pts[a][1]} L${pts[b][0]},${pts[b][1]}`} />
+          </circle>
+        </g>
+      ))}
+      {pts.map(([x, y], i) => (
+        <g key={i} className={i === 1 ? 'mesh-node mesh-leader' : 'mesh-node'}>
+          <circle cx={x} cy={y} r={i === 1 ? 5 : 3.5} />
+          {i === 1 && <circle cx={x} cy={y} r="5" className="mesh-pulse" />}
+        </g>
+      ))}
+    </svg>
   );
 }
 
@@ -246,7 +327,9 @@ export default function Home() {
   return (
     <main>
       <Hero onPlay={() => setFilmOpen(true)} />
+      <Marquee items={['Aerial platforms', 'Distributed sensing', 'Resilient navigation', 'Networked autonomy', 'Made in India', 'Chennai · V-NEST']} />
       <Statement />
+      <PlatformBand />
       <Mission />
       <Capabilities />
       <FilmSection />

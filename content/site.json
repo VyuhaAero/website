@@ -19,6 +19,13 @@
     ],
     "body": "The nature of aerial operations has changed. Coverage has to be wider, systems have to be more resilient, and the capability behind them has to be built here. That is the work we have chosen."
   },
+  "platform": {
+    "label": "Concept visualisation",
+    "title": "One platform.",
+    "title_accent": "Many missions.",
+    "note": "Concept render from the VyuhaAero launch film. It shows design intent, not a built or tested aircraft.",
+    "video": "/media/loops/platform.mp4"
+  },
   "mission": {
     "label": "Who we are",
     "title": "Made in India.",

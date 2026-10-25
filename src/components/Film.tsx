@@ -14,8 +14,30 @@ function Player({ autoPlay = false }: { autoPlay?: boolean }) {
   const [started, setStarted] = useState(autoPlay);
 
   useEffect(() => {
-    if (autoPlay && video.current) video.current.play().catch(() => setStarted(false));
+    const v = video.current;
+    if (!v) return;
+    if (autoPlay) { v.play().catch(() => setStarted(false)); return; }
+    // Until the visitor presses play, run a silent preview while on screen.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const io = new IntersectionObserver(([e]) => {
+      if (v.dataset.started) return;
+      if (e.isIntersecting) v.play().catch(() => {});
+      else v.pause();
+    }, { threshold: 0.2 });
+    io.observe(v);
+    return () => io.disconnect();
   }, [autoPlay]);
+
+  const start = () => {
+    const v = video.current;
+    if (!v) return;
+    v.dataset.started = '1';
+    v.currentTime = 0;
+    v.muted = false;
+    v.loop = false;
+    setStarted(true);
+    v.play().catch(() => {});
+  };
 
   if (yt) {
     return started ? (
@@ -42,15 +64,13 @@ function Player({ autoPlay = false }: { autoPlay?: boolean }) {
         src={asset(f.video)}
         poster={asset(f.poster)}
         controls={started}
+        muted={!autoPlay}
+        loop={!autoPlay}
         playsInline
         preload="metadata"
       />
       {!started && (
-        <button
-          className="film-cover film-cover-overlay"
-          aria-label="Play the launch film"
-          onClick={() => { setStarted(true); video.current?.play(); }}
-        >
+        <button className="film-cover film-cover-overlay" aria-label="Play the launch film" onClick={start}>
           <PlayMark />
         </button>
       )}
